@@ -1,0 +1,13 @@
+# IntelliJ Artifacts
+.idea/
+.idea/*/*
+*.iml
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+dataset.txt
+featureset.txt
+target/
