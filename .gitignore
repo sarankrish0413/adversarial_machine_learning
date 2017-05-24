@@ -10,4 +10,9 @@
 
 dataset.txt
 featureset.txt
+final_dataset.arff
+ionosphere.arff
+first_observation.arff
+output_features_2500.txt
+temp.txt
 target/

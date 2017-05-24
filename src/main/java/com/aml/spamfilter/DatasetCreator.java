@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,19 +40,19 @@ public class DatasetCreator {
     /*
         Example file format
         --------------------
-        @relation datasetname
+        @relation trec2007
 
-        @attribute token1 numeric
-        @attribute token2 numeric
-        @attribute token3 {val1, val2, val3}
-        @attribute token4 {TRUE, FALSE}
-        @attribute token5 {yes, no}
+        @attribute "generic" {false, true}
+        @attribute "cialis" {false, true}
+        @attribute "branded" {false, true}
+        @attribute "feel" {false, true}
+        @attribute "spam_or_ham_class" {spam, ham}
 
         @data
-        85,85,val1,FALSE,no
-        80,90,val2,TRUE,no
-        83,86,val3,FALSE,yes
-
+        false,false,true,true,spam
+        false,false,false,false,ham
+        false,false,false,false,spam
+        false,false,false,false,spam
     */
 
     public void createDataSet() {
@@ -87,7 +86,9 @@ public class DatasetCreator {
         // Example
         // inmail.1 -> spam
         // inmail.2 -> ham
-        Map<String, String> emailFileNameToClassification = getEmailClassificationFromIndexFile();
+        EmailClassifier emailClassifier = new EmailClassifier()
+                .withEmailClassificationIndexFile(emailClassificationIndexFile);
+        Map<String, String> emailFileNameToClassification = emailClassifier.getEmailClassificationFromIndexFile();
 
         for (int i = 1; i <= emailCount; i++) {
             String emailFileName = "inmail." + i;
@@ -98,16 +99,6 @@ public class DatasetCreator {
                 System.out.println(i + " emails processed.");
             }
         }
-    }
-
-    private Map<String, String> getEmailClassificationFromIndexFile() throws IOException {
-        Map<String, String> emailFileNameToClassification = new HashMap<>();
-        List<String> lines = Files.readAllLines(Paths.get(emailClassificationIndexFile));
-        for (String line : lines) {
-            String[] parts = line.split("\\s");
-            emailFileNameToClassification.put(parts[1].toLowerCase(), parts[0].toLowerCase());
-        }
-        return emailFileNameToClassification;
     }
 
     private void addDataRecord(String emailFileName, PrintWriter printWriter, List<String> tokens, Map<String, String> emailFileNameToClassification) throws IOException {
