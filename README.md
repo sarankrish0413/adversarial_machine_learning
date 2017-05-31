@@ -26,6 +26,7 @@ We have to create a small feature set to reduce the compuational complexity befo
    
 ## **Development and Testing**
 After every commit, full test suite is run to validate the build using bitbucket pipelines.
+Surefire plugin is used to generate test reports
 All test resources and expected outputs are in test/resources/.
 Make sure you run tests from root directory of project and NOT target directory.
 
