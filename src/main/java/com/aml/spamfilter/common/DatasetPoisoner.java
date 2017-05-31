@@ -1,4 +1,4 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.common;
 
 import org.apache.commons.io.FileUtils;
 import weka.core.Instances;
@@ -17,9 +17,6 @@ import java.util.Map;
  */
 public class DatasetPoisoner {
 
-    /** temp folder to copy all emails and poison */
-    private static final String TEMP_FOLDER = "/tmp/temp_folder_to_delete/";
-
     /** Location of emails folder */
     private String emailFolderLocationToPoison;
 
@@ -37,6 +34,9 @@ public class DatasetPoisoner {
 
     /** Count of emails to poison */
     private int emailCount;
+    
+    /** Temp folder to poison dataset */
+    private String tempFolderToPoisonDataset;
 
     public DatasetPoisoner withEmailFolderLocationToPoison(String emailFolderLocationToPoison) {
         this.emailFolderLocationToPoison = emailFolderLocationToPoison;
@@ -68,6 +68,11 @@ public class DatasetPoisoner {
         return this;
     }
 
+    public DatasetPoisoner withTempFolderToPoisonDataset(String tempFolderToPoisonDataset) {
+        this.tempFolderToPoisonDataset = tempFolderToPoisonDataset;
+        return this;
+    }
+
     public Instances poisonDataset() throws IOException {
         deleteTempDirectory();
         copyAllEmailsToTempDirectory();
@@ -81,10 +86,10 @@ public class DatasetPoisoner {
         int emailIndex = 1;
         int emailsPoisoned = 0;
         while ((emailsPoisoned < countOFEmailsToPoison) && (emailIndex < emailCount)) {
-            String emailFileName = TEMP_FOLDER + "inmail." + emailIndex;
+            String emailFileName = tempFolderToPoisonDataset + "inmail." + emailIndex;
             if (emailFileNameToClassification.get("inmail." + emailIndex).equals("spam")) { // Only poison spam emails, ignore ham
                 File emailToPoison = new File(emailFileName);
-                FileUtils.writeLines(emailToPoison, goodWords);
+                FileUtils.writeLines(emailToPoison, goodWords, true);
                 emailsPoisoned++;
             }
             emailIndex++;
@@ -99,7 +104,7 @@ public class DatasetPoisoner {
     private Instances createDatasetFromTempFolder() throws IOException {
         new DatasetCreator()
                 .withDatasetName("poisoned_data_set_with" + poisoningPercentage + "_percentage")
-                .withEmailFolderLocation(TEMP_FOLDER)
+                .withEmailFolderLocation(tempFolderToPoisonDataset)
                 .withTokensFileLocation(featureSetFileLocation) // featurset is subset of tokens learnt from salearn (spamassasin)
                 .withEmailClassificationIndexFile(emailClassificationIndexFile)
                 .withEmailCount(emailCount)
@@ -114,10 +119,11 @@ public class DatasetPoisoner {
     }
 
     private void copyAllEmailsToTempDirectory() throws IOException {
-        FileUtils.copyDirectory(new File(emailFolderLocationToPoison), new File(TEMP_FOLDER));
+        FileUtils.copyDirectory(new File(emailFolderLocationToPoison), new File(tempFolderToPoisonDataset));
     }
 
     private void deleteTempDirectory() throws IOException {
-        FileUtils.deleteDirectory(new File(TEMP_FOLDER));
+        FileUtils.deleteDirectory(new File(tempFolderToPoisonDataset));
     }
+    
 }

@@ -16,3 +16,7 @@ first_observation.arff
 output_features_2500.txt
 temp.txt
 target/
+resources/common/tmp/
+ham.txt
+ionosphere.arff
+output_features.txt

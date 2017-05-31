@@ -1,0 +1,16 @@
+@relation testDataSet
+
+@attribute "generic" {false, true}
+@attribute "cialis" {false, true}
+@attribute "branded" {false, true}
+@attribute "feel" {false, true}
+@attribute "snapshot" {false, true}
+@attribute "release" {false, true}
+@attribute "Packages" {false, true}
+@attribute "spam_or_ham_class" {spam, ham}
+
+@data
+false,false,true,true,false,false,false,spam
+false,false,false,false,true,true,true,ham
+false,false,false,false,false,false,false,spam
+

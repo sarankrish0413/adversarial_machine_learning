@@ -1,5 +1,6 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.featureselection;
 
+import com.aml.spamfilter.common.DatasetCreator;
 import weka.attributeSelection.AttributeSelection;
 import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.Ranker;

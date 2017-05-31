@@ -1,4 +1,4 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.featureselection;
 
 
 import org.apache.commons.io.FileUtils;
@@ -14,12 +14,12 @@ import static org.junit.Assert.assertEquals;
 public class FeatureSetCreatorTest {
 
     private static final String TEST_EMAIL_FOLDER_LOCATION = "src/test/resources/data/";
-    private static final String TEST_TOKENS_FILE_LOCATION = "src/test/resources/tokens.txt";
-    private static final String TEST_EMAIL_CLASSIFICATION_INDEX_FILE = "src/test/resources/index";
+    private static final String TEST_TOKENS_FILE_LOCATION = "src/test/resources/featureselection/tokens.txt";
+    private static final String TEST_EMAIL_CLASSIFICATION_INDEX_FILE = "src/test/resources/featureselection/index";
     private static final int TEST_EMAIL_COUNT = 4;
     private static final String TEST_FEATURESET_OUTPUT_FILE_LOCATION = "featureset.txt";
     private static final int TEST_OUTPUT_FEATURESET_COUNT = 1;
-    private static final String EXPECTED_OUTPUT_FEATURESET_FILE_NAME = "src/test/resources/expected_featureset.txt";
+    private static final String EXPECTED_OUTPUT_FEATURESET_FILE_NAME = "src/test/resources/featureselection/expected_featureset.txt";
 
     @Before
     public void setUp() throws IOException {

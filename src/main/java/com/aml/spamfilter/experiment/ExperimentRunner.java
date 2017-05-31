@@ -1,5 +1,12 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.experiment;
 
+import com.aml.spamfilter.common.DatasetCreator;
+import com.aml.spamfilter.common.DatasetPoisoner;
+import com.aml.spamfilter.graphs.VisualGraphCreator;
+import com.aml.spamfilter.weightedbagging.HistogramWeightEstimator;
+import com.aml.spamfilter.weightedbagging.KernelWeightEstimator;
+import com.aml.spamfilter.weightedbagging.WeightEstimator;
+import com.aml.spamfilter.weightedbagging.WeightedBagging;
 import weka.core.Instances;
 
 import java.io.*;
@@ -9,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * This is the main component which I use to run the experiment for various inputs.
+ *
  * Created by saranyakrishnan on 5/20/17.
  */
 public class ExperimentRunner {
@@ -34,6 +43,10 @@ public class ExperimentRunner {
     /** Test dataset file (should be arff */
     private String testDatasetFileLocation;
 
+    /** Temp folder to copy emails and poison */
+    private String tempFolderToPoisonDataset;
+
+
 
     public static void main(String[] commandLineArguments) throws Exception {
         ExperimentRunner experimentRunner = new ExperimentRunner()
@@ -43,15 +56,14 @@ public class ExperimentRunner {
                 .withEmailCount(Integer.parseInt(commandLineArguments[3]))
                 .withOutputDataSetFileName(commandLineArguments[4])
                 .withGoodWordsFileLocation(commandLineArguments[5])
-                .withTestDatasetFileLocation(commandLineArguments[6]);
-
-        experimentRunner.validate();
+                .withTestDatasetFileLocation(commandLineArguments[6])
+                .withTempFolderToPoisonDataset(commandLineArguments[7]);
 
         experimentRunner.createDataSet();
 
         Map<String, List<Double>> results = experimentRunner.runExperiment();
 
-        System.out.println("commandLineArguments = [" + results + "]");
+        System.out.println("AUC Values = [" + results + "]");
 
         experimentRunner.chartResults(results);
     }
@@ -91,6 +103,10 @@ public class ExperimentRunner {
         return this;
     }
 
+    private ExperimentRunner withTempFolderToPoisonDataset(String tempFolderToPoisonDataset) {
+        this.tempFolderToPoisonDataset = tempFolderToPoisonDataset;
+        return this;
+    }
 
     private void createDataSet() {
         new DatasetCreator()
@@ -103,14 +119,6 @@ public class ExperimentRunner {
                 .createDataSet();
     }
 
-    private void validate() {
-        // TODO: add proper validation logic
-        if (false) {
-            throw new RuntimeException("arguments are not valid to run experiment");
-        }
-    }
-
-
     public Map<String, List<Double>> runExperiment() throws Exception {
         // Measure of AUC for all probability density methods in experiment
         // AUC == Area under ROC Curve
@@ -118,7 +126,7 @@ public class ExperimentRunner {
         probabilityDensityFunctionNameToAUC.put("histogram", new ArrayList<>()); // initialize with empty lists
         probabilityDensityFunctionNameToAUC.put("kernel_estimator", new ArrayList<>()); // initialize with empty lists
 
-        for (int poisoningPercentage = 0; poisoningPercentage <= 20; poisoningPercentage += 2) {
+        for (int poisoningPercentage = 0; poisoningPercentage <= 40; poisoningPercentage += 4) {
             System.out.println("Poisoning " + poisoningPercentage + " percentage of dataset");
             DatasetPoisoner datasetPoisoner = new DatasetPoisoner()
                     .withEmailFolderLocationToPoison(emailFolderLocation)
@@ -126,7 +134,8 @@ public class ExperimentRunner {
                     .withGoodWordsFileLocation(goodWordsFileLocation)
                     .withEmailClassificationIndexFile(emailClassificationIndexFile)
                     .withFeatureSetFileLocation(featureSetFileLocation)
-                    .withEmailCount(emailCount);
+                    .withEmailCount(emailCount)
+                    .withTempFolderToPoisonDataset(tempFolderToPoisonDataset);
 
             Instances poisonedDataset = datasetPoisoner.poisonDataset();
 
@@ -179,11 +188,15 @@ public class ExperimentRunner {
 
         weightedBagging.classifySpamOrHam();
 
+
         return weightedBagging.computeAUC();
     }
 
     private void chartResults(Map<String, List<Double>> results) {
-        // Here we will chart the results
+        VisualGraphCreator visualGraphCreator = new VisualGraphCreator("Weighted Bagging (Ensemble Size = 50)")
+                .withData(results)
+                .withStepValue(4);
+        visualGraphCreator.drawGraph();
     }
 
 }

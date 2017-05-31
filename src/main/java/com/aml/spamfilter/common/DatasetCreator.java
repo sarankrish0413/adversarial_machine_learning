@@ -1,4 +1,4 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.common;
 
 import org.apache.commons.io.FileUtils;
 
@@ -83,20 +83,38 @@ public class DatasetCreator {
     private void addData(PrintWriter printWriter, List<String> tokens) throws IOException {
         printWriter.println("@data");
 
-        // Example
+
+        EmailClassifier emailClassifier = new EmailClassifier().withEmailClassificationIndexFile(emailClassificationIndexFile);
+        // Example Content in Map
         // inmail.1 -> spam
         // inmail.2 -> ham
-        EmailClassifier emailClassifier = new EmailClassifier()
-                .withEmailClassificationIndexFile(emailClassificationIndexFile);
         Map<String, String> emailFileNameToClassification = emailClassifier.getEmailClassificationFromIndexFile();
+        int spamCount = 0;
+        int hamCount  = 0;
+        int emailsProcessed = 1;
 
-        for (int i = 1; i <= emailCount; i++) {
-            String emailFileName = "inmail." + i;
-            addDataRecord(emailFileName, printWriter, tokens, emailFileNameToClassification);
+        while ((spamCount + hamCount + 1) < emailCount) {
+            String emailFileName = "inmail." + emailsProcessed++;
+            if (emailFileNameToClassification.get(emailFileName).equals("spam")) {
+                if (spamCount < emailCount / 2) {
+                    addDataRecord(emailFileName, printWriter, tokens, emailFileNameToClassification);
+                    spamCount++;
+                }
+            }
+            else {
+                if (hamCount < emailCount / 2) {
+                    addDataRecord(emailFileName, printWriter, tokens, emailFileNameToClassification);
+                    hamCount++;
+                }
+
+            }
 
             // Show progress on count of emails processed
-            if (i % 100 == 0) {
-                System.out.println(i + " emails processed.");
+            if (spamCount % 100 == 0) {
+                System.out.println(spamCount + " spam emails processed.");
+            }
+            if (hamCount % 100 == 0) {
+                System.out.println(hamCount + " ham emails processed.");
             }
         }
     }

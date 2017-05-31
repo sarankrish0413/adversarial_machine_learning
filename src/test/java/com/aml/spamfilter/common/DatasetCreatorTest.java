@@ -1,4 +1,4 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.common;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -15,11 +15,11 @@ public class DatasetCreatorTest {
 
     private static final String TEST_DATASET_NAME = "testDataSet";
     private static final String TEST_EMAIL_FOLDER_LOCATION = "src/test/resources/data/";
-    private static final String TEST_TOKENS_FILE_LOCATION = "src/test/resources/tokens.txt";
-    private static final String TEST_EMAIL_CLASSIFICATION_INDEX_FILE = "src/test/resources/index";
+    private static final String TEST_TOKENS_FILE_LOCATION = "src/test/resources/common/tokens.txt";
+    private static final String TEST_EMAIL_CLASSIFICATION_INDEX_FILE = "src/test/resources/common/index";
     private static final int TEST_EMAIL_COUNT = 4;
     private static final String TEST_OUTPUT_DATASET_FILE_NAME = "dataset.txt";
-    private static final String EXPECTED_OUTPUT_DATASET_FILE_NAME = "src/test/resources/expected_dataset.txt";
+    private static final String EXPECTED_OUTPUT_DATASET_FILE_NAME = "src/test/resources/common/expected_dataset.txt";
 
     @Before
     public void setUp() throws IOException {
@@ -45,7 +45,7 @@ public class DatasetCreatorTest {
 
         // Assert
         assertEquals("The generated dataset does not match expected dataset !",
-                FileUtils.readFileToString(new File(EXPECTED_OUTPUT_DATASET_FILE_NAME), "utf-8"),
-                FileUtils.readFileToString(new File(TEST_OUTPUT_DATASET_FILE_NAME), "utf-8"));
+                FileUtils.readFileToString(new File(EXPECTED_OUTPUT_DATASET_FILE_NAME), "utf-8").trim(),
+                FileUtils.readFileToString(new File(TEST_OUTPUT_DATASET_FILE_NAME), "utf-8").trim());
     }
 }

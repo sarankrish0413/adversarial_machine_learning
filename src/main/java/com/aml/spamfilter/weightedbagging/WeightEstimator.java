@@ -1,4 +1,4 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.weightedbagging;
 
 import weka.core.Instances;
 

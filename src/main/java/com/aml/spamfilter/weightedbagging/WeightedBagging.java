@@ -1,8 +1,8 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.weightedbagging;
 
 import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.evaluation.ThresholdCurve;
-import weka.classifiers.functions.SMO;
 import weka.classifiers.meta.Bagging;
 import weka.core.Instances;
 
@@ -40,17 +40,17 @@ public class WeightedBagging {
 
     /**
      * Gets the estimated weights and uses it to do bagging
-     * @throws Exception
+     * @throws Exception When classification fails
      */
     public void classifySpamOrHam() throws Exception {
         double[] weights = weightEstimator.estimateWeights(dataset);
         applyWeight(weights);
 
-        SMO smo = new SMO();
+        NaiveBayes naiveBayes = new NaiveBayes();
         bagger = new Bagging();
-        bagger.setClassifier(smo);
+        bagger.setClassifier(naiveBayes);
         bagger.setSeed(1);
-        bagger.setNumIterations(10);
+        bagger.setNumIterations(50);
         bagger.setCalcOutOfBag(false);
         bagger.setNumExecutionSlots(1);
         bagger.setBagSizePercent(100);
@@ -70,15 +70,15 @@ public class WeightedBagging {
 
     /**
      * Compute Area under ROC curve
-     * @return
-     * @throws Exception
+     * @return Returns double value in range of 0 to 1
+     * @throws Exception When AUC computation fails
      */
     public Double computeAUC() throws Exception {
         Evaluation eval = new Evaluation(dataset);
-        //eval.crossValidateModel(bagger, testDataset, 10, new Random(1));
         eval.evaluateModel(bagger, testDataset);
+
         ThresholdCurve tc = new ThresholdCurve();
-        int classIndex = 0;
+        int classIndex = 1;
         Instances result = tc.getCurve(eval.predictions(), classIndex);
         return ThresholdCurve.getROCArea(result);
     }

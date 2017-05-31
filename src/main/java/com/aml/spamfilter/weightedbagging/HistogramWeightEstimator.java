@@ -1,8 +1,6 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.weightedbagging;
 
 import weka.core.Instances;
-
-import java.util.Arrays;
 
 /**
  * This class computes probability density estimates and returns a double array where each element is weight of
@@ -16,10 +14,13 @@ public class HistogramWeightEstimator implements WeightEstimator {
         double[][] histogram = createHistogram(dataset);
 
         double[] weights = new double[dataset.numInstances()];
-        for (int weightIndex = 0; weightIndex < weights.length; weightIndex++) {
-            weights[weightIndex] = Arrays.stream(histogram[weightIndex]).sum();
+        for (int instanceIndex = 0; instanceIndex < dataset.numInstances(); instanceIndex++) {
+            double sum = 0;
+            for (int attributeIndex = 0; attributeIndex < dataset.get(instanceIndex).numAttributes(); attributeIndex++) {
+                sum += histogram[instanceIndex][(int)dataset.get(instanceIndex).value(attributeIndex)];
+            }
+            weights[instanceIndex] = sum / dataset.numAttributes();
         }
-
         return weights;
     }
 
@@ -40,12 +41,14 @@ public class HistogramWeightEstimator implements WeightEstimator {
 
     private double[][] normalizeHistogramValues(int[][] histogramArray, int attrCount) {
         double[][] featureMatrix = new double[histogramArray.length][2];
+
         //Copy the histogram intensity value to feature matrix
         for (int mailIndex = 0; mailIndex < histogramArray.length; mailIndex++) {
-            for (int intensityIndex = 0; intensityIndex < 2; intensityIndex++) {
-                featureMatrix[mailIndex][intensityIndex] = histogramArray[mailIndex][intensityIndex] / (attrCount * 1.0);
+            for (int attrIndex = 0; attrIndex < 2; attrIndex++) {
+                featureMatrix[mailIndex][attrIndex] = histogramArray[mailIndex][attrIndex] / (attrCount * 1.0);
             }
         }
+
         return featureMatrix;
     }
 

@@ -1,4 +1,4 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.weightedbagging;
 
 import libsvm.svm;
 import libsvm.svm_model;
@@ -23,18 +23,21 @@ public class KernelWeightEstimator implements WeightEstimator {
         double[] probabilityEstimates = calculateProbabilityEstimates(dataset);
         double[] weightEstimates = new double[dataset.numInstances()];
         for (int instanceIndex = 0; instanceIndex < dataset.numInstances(); instanceIndex++) {
+            double sum = 0;
             for (int attributeIndex = 0; attributeIndex < dataset.get(instanceIndex).numAttributes(); attributeIndex++) {
-                weightEstimates[instanceIndex] += probabilityEstimates[(int) dataset.instance(instanceIndex).value(attributeIndex)];
+                 sum+= probabilityEstimates[(int) dataset.instance(instanceIndex).value(attributeIndex)];
             }
+            //changed today
+            weightEstimates[instanceIndex] = sum / dataset.instance(instanceIndex).numAttributes();
         }
         return weightEstimates;
     }
 
     private double[] calculateProbabilityEstimates(Instances dataset) throws Exception {
+        svm.svm_set_print_string_function((s) -> {}); // Disable console output
         LibSVM libsvmModel = new LibSVM();
         libsvmModel.setKernelType(new SelectedTag(LibSVM.KERNELTYPE_RBF, LibSVM.TAGS_KERNELTYPE));
         libsvmModel.setGamma(0.00005);
-        libsvmModel.setCost(1.5);
         libsvmModel.setProbabilityEstimates(true);
 
         // train classifier

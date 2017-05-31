@@ -1,4 +1,4 @@
-package com.aml.spamfilter;
+package com.aml.spamfilter.common;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,9 +8,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ *
+ * Takes in the index file that has classifification for each email stating
+ * if its spam or ham and converts them into a map.
+ *
  * Created by saranyakrishnan on 5/21/17.
  */
-public class EmailClassifier {
+class EmailClassifier {
 
     /** Location of index file where we have a list of all email file names and its corresponding class (spam or ham) */
     private String emailClassificationIndexFile;
