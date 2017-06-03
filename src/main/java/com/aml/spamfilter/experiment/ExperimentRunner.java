@@ -126,6 +126,11 @@ public class ExperimentRunner {
         probabilityDensityFunctionNameToAUC.put("histogram", new ArrayList<>()); // initialize with empty lists
         probabilityDensityFunctionNameToAUC.put("kernel_estimator", new ArrayList<>()); // initialize with empty lists
 
+        File testDatasetFile = new File(testDatasetFileLocation);
+        InputStream targetStream = new FileInputStream(testDatasetFile);
+        Instances testDataset = new Instances(new BufferedReader(new InputStreamReader(targetStream, "UTF-8")));
+        testDataset.setClassIndex(testDataset.numAttributes() - 1);
+
         for (int poisoningPercentage = 0; poisoningPercentage <= 40; poisoningPercentage += 4) {
             System.out.println("Poisoning " + poisoningPercentage + " percentage of dataset");
             DatasetPoisoner datasetPoisoner = new DatasetPoisoner()
@@ -139,8 +144,8 @@ public class ExperimentRunner {
 
             Instances poisonedDataset = datasetPoisoner.poisonDataset();
 
-            double aucForHistogram = computeAUCForHistogram(new Instances(poisonedDataset));
-            double aucForKernelEstimator = computeAUCForKernelEstimator(new Instances(poisonedDataset));
+            double aucForHistogram = computeAUCForHistogram(new Instances(poisonedDataset), testDataset);
+            double aucForKernelEstimator = computeAUCForKernelEstimator(new Instances(poisonedDataset), testDataset);
 
             probabilityDensityFunctionNameToAUC
                     .get("histogram")
@@ -154,13 +159,10 @@ public class ExperimentRunner {
         return probabilityDensityFunctionNameToAUC;
     }
 
-    private Double computeAUCForHistogram(Instances poisonedDataset) throws Exception {
+    private Double computeAUCForHistogram(Instances poisonedDataset, Instances testDataset) throws Exception {
         WeightEstimator weightEstimator = new HistogramWeightEstimator();
 
-        File testDatasetFile = new File(testDatasetFileLocation);
-        InputStream targetStream = new FileInputStream(testDatasetFile);
-        Instances testDataset = new Instances(new BufferedReader(new InputStreamReader(targetStream, "UTF-8")));
-        testDataset.setClassIndex(testDataset.numAttributes() - 1);
+
 
         WeightedBagging weightedBagging = new WeightedBagging()
                 .withWeightEstimator(weightEstimator)
@@ -172,14 +174,8 @@ public class ExperimentRunner {
         return weightedBagging.computeAUC();
     }
 
-    private Double computeAUCForKernelEstimator(Instances poisonedDataset) throws Exception {
+    private Double computeAUCForKernelEstimator(Instances poisonedDataset, Instances testDataset) throws Exception {
         WeightEstimator weightEstimator = new KernelWeightEstimator();
-
-        File testDatasetFile = new File(testDatasetFileLocation);
-        InputStream targetStream = new FileInputStream(testDatasetFile);
-        Instances testDataset = new Instances(new BufferedReader(new InputStreamReader(targetStream, "UTF-8")));
-        testDataset.setClassIndex(testDataset.numAttributes() - 1);
-
 
         WeightedBagging weightedBagging = new WeightedBagging()
                 .withWeightEstimator(weightEstimator)
@@ -193,7 +189,7 @@ public class ExperimentRunner {
     }
 
     private void chartResults(Map<String, List<Double>> results) {
-        VisualGraphCreator visualGraphCreator = new VisualGraphCreator("Weighted Bagging (Ensemble Size = 50)")
+        VisualGraphCreator visualGraphCreator = new VisualGraphCreator("Weighted Bagging (Ensemble Size = 10)")
                 .withData(results)
                 .withStepValue(4);
         visualGraphCreator.drawGraph();

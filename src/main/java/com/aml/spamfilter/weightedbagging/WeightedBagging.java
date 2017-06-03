@@ -50,7 +50,7 @@ public class WeightedBagging {
         bagger = new Bagging();
         bagger.setClassifier(naiveBayes);
         bagger.setSeed(1);
-        bagger.setNumIterations(50);
+        bagger.setNumIterations(10);
         bagger.setCalcOutOfBag(false);
         bagger.setNumExecutionSlots(1);
         bagger.setBagSizePercent(100);

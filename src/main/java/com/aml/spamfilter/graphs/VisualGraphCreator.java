@@ -59,8 +59,6 @@ public class VisualGraphCreator extends ApplicationFrame {
         legend.setItemFont(font);
         legend.setPosition(RectangleEdge.BOTTOM);
         chart.addLegend(legend);
-//        NumberAxis xAxis = (NumberAxis) plot.getRangeAxis();
-//        xAxis.setTickUnit(new NumberTickUnit(0.5));
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(800, 600));
         setContentPane(chartPanel);
@@ -101,32 +99,39 @@ public class VisualGraphCreator extends ApplicationFrame {
 
     public static void main(String[] args) {
         Map<String, List<Double>> testData = new HashMap<>();
+
+
         List<Double> histogramValues = new ArrayList<Double>() {{
-            add(0.9791516068793109);
-            add(0.977407307008825);
-            add(0.9431139122315593);
-            add(0.8202290593656818);
-            add(0.6333393572482756);
-            add(0.5757808499743984);
-            add(0.5362940875274841);
-            add(0.5127865124544442);
-            add(0.5108008794915816);
-            add(0.5124299719887955);
-            add(0.5069659046414264);
+            add(0.984277958495226);
+            add(0.9080833408632271);
+            add(0.6021731273154423);
+            add(0.5142299930724978);
+            add(0.5056139122315593);
+            add(0.49040277401283094);
+            add( 0.49338272943586037);
+            add(0.49607843137254903);
+            add( 0.4973856209150327);
+            add( 0.4993464052287582);
+            add( 0.4993464052287582);
+
+
         }};
 
         List<Double> kernelValues = new ArrayList<Double>() {{
-            add(0.978584229390681);
-            add(0.9745218517514532);
-            add(0.9234006505828137);
-            add(0.7553292822505346);
-            add(0.6103554862805337);
-            add(0.5475407367247974);
-            add(0.5150959308454565);
-            add(0.5098671726755218);
-            add(0.5118241920424084);
-            add(0.5088208939489774);
-            add(0.5007831089425018);
+            add(0.9843242673413451);
+            add(0.8751441974639318);
+            add(0.5805137646456432);
+            add( 0.506834884491431);
+            add( 0.5078694918827746);
+            add(0.49170770458721125);
+            add( 0.4947712418300654);
+            add( 0.49673202614379086);
+            add(0.4980392156862745);
+            add( 0.4993464052287582);
+            add(0.4993464052287582);
+
+
+
         }};
 
         testData.put("histogram", histogramValues);

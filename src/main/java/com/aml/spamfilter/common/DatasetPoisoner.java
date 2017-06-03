@@ -82,12 +82,12 @@ public class DatasetPoisoner {
 
         List<String> goodWords = Files.readAllLines(Paths.get(goodWordsFileLocation));
         int countOFEmailsToPoison = (int) (((poisoningPercentage * 1.0) / 100) * emailCount);
-
+        int emailStartIndex = 0;
         int emailIndex = 1;
         int emailsPoisoned = 0;
         while ((emailsPoisoned < countOFEmailsToPoison) && (emailIndex < emailCount)) {
-            String emailFileName = tempFolderToPoisonDataset + "inmail." + emailIndex;
-            if (emailFileNameToClassification.get("inmail." + emailIndex).equals("spam")) { // Only poison spam emails, ignore ham
+            String emailFileName = tempFolderToPoisonDataset + "inmail." + (emailStartIndex + emailIndex);
+            if (emailFileNameToClassification.get("inmail." + (emailStartIndex + emailIndex)).equals("spam")) { // Only poison spam emails, ignore ham
                 File emailToPoison = new File(emailFileName);
                 FileUtils.writeLines(emailToPoison, goodWords, true);
                 emailsPoisoned++;
