@@ -90,22 +90,22 @@ public class ExperimentRunner {
         return this;
     }
 
-    private ExperimentRunner withGoodWordsFileLocation(String goodWordsFileLocation) {
+    public ExperimentRunner withGoodWordsFileLocation(String goodWordsFileLocation) {
         this.goodWordsFileLocation = goodWordsFileLocation;
         return this;
     }
 
-    private ExperimentRunner withTestDatasetFileLocation(String testDatasetFileLocation) {
+    public ExperimentRunner withTestDatasetFileLocation(String testDatasetFileLocation) {
         this.testDatasetFileLocation = testDatasetFileLocation;
         return this;
     }
 
-    private ExperimentRunner withTempFolderToPoisonDataset(String tempFolderToPoisonDataset) {
+    public ExperimentRunner withTempFolderToPoisonDataset(String tempFolderToPoisonDataset) {
         this.tempFolderToPoisonDataset = tempFolderToPoisonDataset;
         return this;
     }
 
-    private void createDataSet() {
+    public void createDataSet() {
         new DatasetCreator()
                 .withDatasetName("aml_course_project_data_set")
                 .withEmailFolderLocation(emailFolderLocation)

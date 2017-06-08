@@ -1,0 +1,13 @@
+@relation aml_course_project_data_set
+
+@attribute "generic" {false, true}
+@attribute "cialis" {false, true}
+@attribute "branded" {false, true}
+@attribute "feel" {false, true}
+@attribute "spam_or_ham_class" {spam, ham}
+
+@data
+false,false,true,true,spam
+false,true,false,false,ham
+false,false,false,false,spam
+
