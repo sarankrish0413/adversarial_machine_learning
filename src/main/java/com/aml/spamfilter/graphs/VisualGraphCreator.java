@@ -15,8 +15,6 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RefineryUtilities;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,50 +95,5 @@ public class VisualGraphCreator extends ApplicationFrame {
         return this;
     }
 
-    public static void main(String[] args) {
-        Map<String, List<Double>> testData = new HashMap<>();
-
-
-        List<Double> histogramValues = new ArrayList<Double>() {{
-            add(0.984277958495226);
-            add(0.9080833408632271);
-            add(0.6021731273154423);
-            add(0.5142299930724978);
-            add(0.5056139122315593);
-            add(0.49040277401283094);
-            add( 0.49338272943586037);
-            add(0.49607843137254903);
-            add( 0.4973856209150327);
-            add( 0.4993464052287582);
-            add( 0.4993464052287582);
-
-
-        }};
-
-        List<Double> kernelValues = new ArrayList<Double>() {{
-            add(0.9843242673413451);
-            add(0.8751441974639318);
-            add(0.5805137646456432);
-            add( 0.506834884491431);
-            add( 0.5078694918827746);
-            add(0.49170770458721125);
-            add( 0.4947712418300654);
-            add( 0.49673202614379086);
-            add(0.4980392156862745);
-            add( 0.4993464052287582);
-            add(0.4993464052287582);
-
-
-
-        }};
-
-        testData.put("histogram", histogramValues);
-        testData.put("kernel", kernelValues);
-
-        VisualGraphCreator visualGraphCreator = new VisualGraphCreator("WeightedBagging with 10 iterations")
-                .withData(testData)
-                .withStepValue(4);
-        visualGraphCreator.drawGraph();
-    }
 
 }

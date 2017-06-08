@@ -4,7 +4,9 @@ This project explores different weight estimation techniques that can be used fo
 
 * Histogram
 * Kernel Density Estimation
+* K-Nearest Neighbor
 
+Please refer the [wiki](https://bitbucket.org/sarankuw/adversarial_machine_learning/wiki/Home) for detailed design.
 # Steps to run experiment
 
 1. Create Tokens Using SpamAssasin filter or use the attached file called "tokens.txt"

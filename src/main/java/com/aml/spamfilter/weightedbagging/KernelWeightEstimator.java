@@ -27,7 +27,6 @@ public class KernelWeightEstimator implements WeightEstimator {
             for (int attributeIndex = 0; attributeIndex < dataset.get(instanceIndex).numAttributes(); attributeIndex++) {
                  sum+= probabilityEstimates[(int) dataset.instance(instanceIndex).value(attributeIndex)];
             }
-            //changed today
             weightEstimates[instanceIndex] = sum / dataset.instance(instanceIndex).numAttributes();
         }
         return weightEstimates;

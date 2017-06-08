@@ -3,10 +3,7 @@ package com.aml.spamfilter.experiment;
 import com.aml.spamfilter.common.DatasetCreator;
 import com.aml.spamfilter.common.DatasetPoisoner;
 import com.aml.spamfilter.graphs.VisualGraphCreator;
-import com.aml.spamfilter.weightedbagging.HistogramWeightEstimator;
-import com.aml.spamfilter.weightedbagging.KernelWeightEstimator;
-import com.aml.spamfilter.weightedbagging.WeightEstimator;
-import com.aml.spamfilter.weightedbagging.WeightedBagging;
+import com.aml.spamfilter.weightedbagging.*;
 import weka.core.Instances;
 
 import java.io.*;
@@ -125,6 +122,8 @@ public class ExperimentRunner {
         Map<String, List<Double>> probabilityDensityFunctionNameToAUC = new HashMap<>();
         probabilityDensityFunctionNameToAUC.put("histogram", new ArrayList<>()); // initialize with empty lists
         probabilityDensityFunctionNameToAUC.put("kernel_estimator", new ArrayList<>()); // initialize with empty lists
+        probabilityDensityFunctionNameToAUC.put("knn_estimator", new ArrayList<>()); // initialize with empty lists
+
 
         File testDatasetFile = new File(testDatasetFileLocation);
         InputStream targetStream = new FileInputStream(testDatasetFile);
@@ -146,14 +145,20 @@ public class ExperimentRunner {
 
             double aucForHistogram = computeAUCForHistogram(new Instances(poisonedDataset), testDataset);
             double aucForKernelEstimator = computeAUCForKernelEstimator(new Instances(poisonedDataset), testDataset);
+            double aucForKNearestNeighborEstimator = computeAUCForKNearestNeighborEstimator(new Instances(poisonedDataset), testDataset);
 
-            probabilityDensityFunctionNameToAUC
+
+           probabilityDensityFunctionNameToAUC
                     .get("histogram")
                     .add(aucForHistogram); // Add the value to list for plotting graph in future
 
             probabilityDensityFunctionNameToAUC
                     .get("kernel_estimator")
                     .add((aucForKernelEstimator)); // Add the value to list for plotting graph in future
+
+            probabilityDensityFunctionNameToAUC
+                    .get("knn_estimator")
+                    .add((aucForKNearestNeighborEstimator)); // Add the value to list for plotting graph in future
         }
 
         return probabilityDensityFunctionNameToAUC;
@@ -161,8 +166,6 @@ public class ExperimentRunner {
 
     private Double computeAUCForHistogram(Instances poisonedDataset, Instances testDataset) throws Exception {
         WeightEstimator weightEstimator = new HistogramWeightEstimator();
-
-
 
         WeightedBagging weightedBagging = new WeightedBagging()
                 .withWeightEstimator(weightEstimator)
@@ -186,6 +189,20 @@ public class ExperimentRunner {
 
 
         return weightedBagging.computeAUC();
+    }
+
+    private double computeAUCForKNearestNeighborEstimator(Instances poisonedDataset, Instances testDataset) throws Exception {
+        WeightEstimator weightEstimator = new KNearestNeighborWeightEstimator();
+
+        WeightedBagging weightedBagging = new WeightedBagging()
+                .withWeightEstimator(weightEstimator)
+                .withDataset(poisonedDataset)
+                .withTestDataset(testDataset);
+
+        weightedBagging.classifySpamOrHam();
+
+        return weightedBagging.computeAUC();
+
     }
 
     private void chartResults(Map<String, List<Double>> results) {
