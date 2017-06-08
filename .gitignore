@@ -9,7 +9,6 @@
 .settings/
 
 dataset.txt
-featureset.txt
 final_dataset.arff
 ionosphere.arff
 first_observation.arff
@@ -18,5 +17,4 @@ temp.txt
 target/
 resources/common/tmp/
 ham.txt
-ionosphere.arff
 output_features.txt
