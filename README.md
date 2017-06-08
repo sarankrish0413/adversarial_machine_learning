@@ -7,7 +7,7 @@ This project explores different weight estimation techniques that can be used fo
 * K-Nearest Neighbor
 
 Please refer the [wiki](https://bitbucket.org/sarankuw/adversarial_machine_learning/wiki/Home) for detailed design.
-## **Steps to run experiment**
+# **Steps to run experiment**
 
 1. Create Tokens Using SpamAssasin filter or use the attached file called "tokens.txt"
 1. Create feature set
@@ -31,7 +31,7 @@ We have to create a small feature set to reduce the compuational complexity befo
     * **emailCount**: Count of emails to consider for computation
     * **outputFeaturesetCount**: How many features to generate (or create)
 
-## **Steps to create run experiment using feature set**
+## **Steps to run experiment using feature set**
 Now we can run the experiment using the feature set created in previous step. Please follow these steps.
 
 1. `mvn -q clean install`
