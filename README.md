@@ -7,7 +7,7 @@ This project explores different weight estimation techniques that can be used fo
 * K-Nearest Neighbor
 
 Please refer the [wiki](https://bitbucket.org/sarankuw/adversarial_machine_learning/wiki/Home) for detailed design.
-# Steps to run experiment
+## **Steps to run experiment**
 
 1. Create Tokens Using SpamAssasin filter or use the attached file called "tokens.txt"
 1. Create feature set
