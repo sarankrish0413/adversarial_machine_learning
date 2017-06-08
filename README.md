@@ -14,7 +14,7 @@ Please refer the [wiki](https://bitbucket.org/sarankuw/adversarial_machine_learn
 1. Run experiment using feature set
 
 ## **Steps to create feature set**
-I have to create a small feature set to reduce the compuational complexity before we enter into weighted bagging. Please follow these steps.
+we have to create a small feature set to reduce the compuational complexity before we enter into weighted bagging. Please follow these steps.
 
 1. `mvn -q clean install`
 2. `cd target`
